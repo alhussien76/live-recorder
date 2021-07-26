@@ -1,0 +1,10 @@
+<h1>Screen Recording using RecordRTC</h1>
+
+<br>
+
+<button #startRecordingRef (click)="startRecording()">
+  Start Recording</button>
+<button disabled (click)="stopRecording()" #stopRecordingRef>Stop Recording</button>
+
+<hr>
+<video controls autoplay playsinline #videoRef></video>
