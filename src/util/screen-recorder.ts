@@ -50,7 +50,9 @@ export class ScreenRecorder {
         const audioContext = new AudioContext();
         const mixedAudioStream = audioContext.createMediaStreamDestination();
         audioContext.createMediaStreamSource(audioStream).connect(mixedAudioStream);
-        audioContext.createMediaStreamSource(new MediaStream(screenStream.getAudioTracks())).connect(mixedAudioStream);
+        if (screenStream.getAudioTracks().length) {
+          audioContext.createMediaStreamSource(new MediaStream(screenStream.getAudioTracks())).connect(mixedAudioStream);
+        }
         return new MediaStream([...screenStream.getVideoTracks(), ...mixedAudioStream.stream.getAudioTracks()])
       } else {
         return screenStream;
