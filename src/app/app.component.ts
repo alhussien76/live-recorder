@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ScreenRecorder } from 'src/util/ScreenRecorder';
+import { ScreenRecorder } from 'src/util/screen-recorder';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ export class AppComponent {
   @ViewChild('stopRecordingRef', { static: false }) stopButton: ElementRef;
 
   screenRecorder = new ScreenRecorder();
-  
+
   constructor() { }
  
   startRecording(): void {

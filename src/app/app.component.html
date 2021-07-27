@@ -4,7 +4,7 @@
 
 <button #startRecordingRef (click)="startRecording()">
   Start Recording</button>
-<button disabled (click)="stopRecording()" #stopRecordingRef>Stop Recording</button>
+<button (click)="stopRecording()" #stopRecordingRef>Stop Recording</button>
 
 <hr>
 <video controls autoplay playsinline #videoRef></video>
