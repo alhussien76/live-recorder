@@ -36,25 +36,26 @@ export class ScreenRecorder {
 
   private getDisplayMedia(): Observable<MediaStream> {
     const screenStreamConstraints: MediaStreamConstraints = {
-      audio: false,
+      audio: true,
       video: true
     };
     const audioStreamConstraints: MediaStreamConstraints = {
       audio: true
     };
-    if (navigator.mediaDevices.getDisplayMedia) {
-      return from(Promise.all([
-        navigator.mediaDevices.getDisplayMedia(screenStreamConstraints) as Promise<MediaStream>,
-        navigator.mediaDevices.getUserMedia(audioStreamConstraints) as Promise<MediaStream>
-      ]).then(([screenStream, audioStream]) => {
-        if (audioStream) {
-          console.log(audioStream);
-          console.log(audioStream.getAudioTracks());
-          audioStream.getAudioTracks().forEach(track => screenStream.addTrack(track))
-        }
+    return from(Promise.all([
+      navigator.mediaDevices.getDisplayMedia(screenStreamConstraints) as Promise<MediaStream>,
+      navigator.mediaDevices.getUserMedia(audioStreamConstraints) as Promise<MediaStream>
+    ]).then(([screenStream, audioStream]) => {
+      if (audioStream) {
+        const audioContext = new AudioContext();
+        const mixedAudioStream = audioContext.createMediaStreamDestination();
+        audioContext.createMediaStreamSource(audioStream).connect(mixedAudioStream);
+        audioContext.createMediaStreamSource(new MediaStream(screenStream.getAudioTracks())).connect(mixedAudioStream);
+        return new MediaStream([...screenStream.getVideoTracks(), ...mixedAudioStream.stream.getAudioTracks()])
+      } else {
         return screenStream;
-      }));
-    }
+      }
+    }));
   }
 
   public dispose(): void {
